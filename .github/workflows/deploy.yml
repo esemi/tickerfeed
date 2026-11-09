@@ -41,4 +41,5 @@ jobs:
             poetry install --only main
             pip cache purge
             printf 'api_key=%s\nport=%s\n' '${{ secrets.TICKERFEED_API_KEY }}' '${{ secrets.TICKERFEED_PORT }}' > .env
+            test -z '${{ secrets.TICKERFEED_HTTP_PROXY }}' || echo 'http_proxy=${{ secrets.TICKERFEED_HTTP_PROXY }}' >> .env
             sudo systemctl restart tickerfeed
