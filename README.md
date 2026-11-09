@@ -39,6 +39,8 @@ poetry run pytest --cov=app
 poetry run ruff check app tests && poetry run mypy app && poetry run vulture app
 ```
 
+Прокси для скрапера — `http_proxy` в `.env` (`http://`, `https://`, `socks5://`).
+
 ## Деплой
 
 - systemd-юнит: `etc/tickerfeed.service`, сервис слушает `port` из `.env` напрямую, без nginx.

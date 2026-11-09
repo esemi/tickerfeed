@@ -37,14 +37,20 @@ def build_service(redis: Redis, client: httpx.AsyncClient) -> QuoteService:
     )
 
 
+def build_http_client() -> httpx.AsyncClient:
+    """HTTP client for quote providers."""
+    return httpx.AsyncClient(
+        timeout=app_settings.http_timeout,
+        headers={'User-Agent': app_settings.http_user_agent},
+        proxy=app_settings.http_proxy,
+    )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Open shared redis & http connections."""
     redis = Redis.from_url(app_settings.redis_dsn)
-    async with httpx.AsyncClient(
-        timeout=app_settings.http_timeout,
-        headers={'User-Agent': app_settings.http_user_agent},
-    ) as client:
+    async with build_http_client() as client:
         app.state.service = build_service(redis, client)
         yield
     await redis.aclose()

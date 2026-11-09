@@ -1,7 +1,7 @@
 import httpx
 import pytest
 
-from app.api import app
+from app.api import app, build_http_client
 from app.settings import app_settings
 
 API_KEY = 'test-key'
@@ -46,3 +46,14 @@ async def test_health(client) -> None:
     response = await client.get('/health')
 
     assert response.status_code == 200
+
+
+@pytest.mark.parametrize('proxy', [None, 'socks5://user:pass@proxy:1080'])
+def test_build_http_client(mocker, proxy) -> None:
+    mocker.patch.object(app_settings, 'http_proxy', proxy)
+    client_mock = mocker.patch('app.api.httpx.AsyncClient')
+
+    build_http_client()
+
+    assert client_mock.call_count == 1
+    assert client_mock.call_args.kwargs['proxy'] == proxy
