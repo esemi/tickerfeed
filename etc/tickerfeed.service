@@ -1,0 +1,21 @@
+[Unit]
+Description=tickerfeed quotes API
+After=network-online.target redis-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=tickerfeed
+WorkingDirectory=/home/tickerfeed
+ExecStart=/home/tickerfeed/venv/bin/python -m app.api
+Restart=always
+RestartSec=5
+KillSignal=SIGINT
+TimeoutStopSec=20
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

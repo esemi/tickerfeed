@@ -1,0 +1,44 @@
+name: deploy
+
+on:
+  workflow_run:
+    workflows: [tests]
+    types: [completed]
+    branches: [master]
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: deploy
+        uses: antonov1991/ssh-scp-ssh-pipelines@v1.1.4
+        env:
+          TARGET_DIR: /home/${{ secrets.SSH_USERNAME }}
+          VENV_BIN: venv/bin
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          user: ${{ secrets.SSH_USERNAME }}
+          pass: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          connect_timeout: 10s
+          first_ssh: |-
+            mkdir -p app
+            test -d venv || python3 -m venv venv
+            touch .env
+
+          scp: |-
+            './app/*' => $TARGET_DIR/app/
+            ./poetry.lock => $TARGET_DIR
+            ./pyproject.toml => $TARGET_DIR
+
+          last_ssh: |-
+            source $VENV_BIN/activate
+            pip install -U --no-cache-dir poetry pip setuptools
+            poetry install --only main
+            pip cache purge
+            printf 'api_key=%s\nport=%s\n' '${{ secrets.TICKERFEED_API_KEY }}' '${{ secrets.TICKERFEED_PORT }}' > .env
+            sudo systemctl restart tickerfeed
