@@ -17,7 +17,7 @@ Google Sheets ── Apps Script =TICKERFEED() ──► tickerfeed API ──�
 =TICKERFEED("LSE:VOD"; "price"; TRUE)   пенсы → фунты
 ```
 
-Атрибуты: `price, currency, name`.
+Атрибуты: `price, currency, name`. Неизвестный тикер или сбой провайдера — `#N/A` (текстом), причина в логе выполнений Apps Script.
 
 Биржи: `LSE`/`LON` → `.L`, `NYSE`, `NYSEARCA`, `NYSEAMERICAN`, `NASDAQ`, `BATS`. Без префикса символ уходит в Yahoo как есть.
 

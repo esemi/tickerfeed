@@ -9,6 +9,7 @@
 var ATTRIBUTES = ['price', 'currency', 'name'];
 var CLIENT_CACHE_SECONDS = 5 * 60;
 var CACHE_PREFIX = 'tickerfeed:';
+var NA = '#N/A';
 
 /**
  * Returns a quote attribute, like GOOGLEFINANCE.
@@ -27,11 +28,11 @@ function TICKERFEED(symbols, attribute, gbp) {
     gbp = gbp === true;
 
     if (!Array.isArray(symbols)) {
-        var single = fetchResults_([symbols.toString().trim()], gbp)[symbols.toString().trim()];
-        if (single.error) {
-            throw new Error(single.error);
+        var query = symbols.toString().trim();
+        if (!query) {
+            return '';
         }
-        return attributeValue_(single.quote, attribute);
+        return resultValue_(fetchResults_([query], gbp)[query], attribute);
     }
 
     var queries = [];
@@ -51,14 +52,18 @@ function TICKERFEED(symbols, attribute, gbp) {
             if (!query) {
                 return '';
             }
-            var result = results[query];
-            return result.error ? '#' + result.error : attributeValue_(result.quote, attribute);
+            return resultValue_(results[query], attribute);
         });
     });
 }
 
-function attributeValue_(quote, attribute) {
-    var value = quote[attribute];
+/** Like GOOGLEFINANCE: unknown symbol or provider failure → #N/A, the reason goes to the execution log. */
+function resultValue_(result, attribute) {
+    if (result.error) {
+        console.log('%s: %s', result.query, result.error);
+        return NA;
+    }
+    var value = result.quote[attribute];
     if (value === null || value === undefined) {
         return '';
     }
