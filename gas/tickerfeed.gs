@@ -6,7 +6,7 @@
  *   TICKERFEED_API_KEY  same as api_key in server .env
  */
 
-var ATTRIBUTES = ['price', 'priceopen', 'high', 'low', 'volume', 'closeyest', 'change', 'currency', 'name', 'tradetime'];
+var ATTRIBUTES = ['price', 'currency', 'name'];
 var CLIENT_CACHE_SECONDS = 5 * 60;
 var CACHE_PREFIX = 'tickerfeed:';
 
@@ -14,7 +14,7 @@ var CACHE_PREFIX = 'tickerfeed:';
  * Returns a quote attribute, like GOOGLEFINANCE.
  *
  * @param {string|Array<Array<string>>} symbols "LSE:VUSA", "NYSE:KO" or a range of them.
- * @param {string} attribute price (default), priceopen, high, low, volume, closeyest, change, currency, name, tradetime.
+ * @param {string} attribute price (default), currency, name.
  * @param {boolean} gbp convert pence-quoted LSE instruments to GBP, default FALSE.
  * @return attribute value(s), same shape as symbols.
  * @customfunction
@@ -62,7 +62,7 @@ function attributeValue_(quote, attribute) {
     if (value === null || value === undefined) {
         return '';
     }
-    return attribute === 'tradetime' ? new Date(value) : value;
+    return value;
 }
 
 /** Map query → {quote, error}; serves from CacheService, fetches the rest in one request. */

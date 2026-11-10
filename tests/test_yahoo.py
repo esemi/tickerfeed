@@ -1,5 +1,3 @@
-from datetime import UTC, datetime
-
 import httpx
 import pytest
 import respx
@@ -22,22 +20,6 @@ def test_parse_chart(chart_payload) -> None:
     assert quote.symbol == 'VOD.L'
     assert quote.name == 'Vodafone Group Public Limited Company'
     assert quote.currency == 'GBp'
-    assert quote.price == 116.95
-    assert quote.priceopen == pytest.approx(116.1)
-    assert quote.high == 117.506
-    assert quote.low == 115.6
-    assert quote.volume == 40641039
-    assert quote.closeyest == 116.5
-    assert quote.change == 0.45
-    assert quote.tradetime == datetime.fromtimestamp(1794242890, tz=UTC)
-
-
-def test_parse_chart_no_indicators(chart_payload) -> None:
-    del chart_payload['chart']['result'][0]['indicators']
-
-    quote = parse_chart(chart_payload)
-
-    assert quote.priceopen is None
     assert quote.price == 116.95
 
 

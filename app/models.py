@@ -13,30 +13,15 @@ class Quote(BaseModel):
     name: str | None = None
     currency: str | None = None
     price: float | None = None
-    priceopen: float | None = None
-    high: float | None = None
-    low: float | None = None
-    volume: int | None = None
-    closeyest: float | None = None
-    change: float | None = None
-    tradetime: datetime | None = None
 
     def in_pounds(self) -> 'Quote':
         """Convert pence-quoted instrument to GBP."""
         if self.currency not in PENCE_CURRENCIES:
             return self
 
-        def _div(amount: float | None) -> float | None:
-            return None if amount is None else round(amount / 100, 8)
-
         return self.model_copy(update={
             'currency': 'GBP',
-            'price': _div(self.price),
-            'priceopen': _div(self.priceopen),
-            'high': _div(self.high),
-            'low': _div(self.low),
-            'closeyest': _div(self.closeyest),
-            'change': _div(self.change),
+            'price': None if self.price is None else round(self.price / 100, 8),
         })
 
 

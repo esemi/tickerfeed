@@ -12,12 +12,12 @@ Google Sheets ── Apps Script =TICKERFEED() ──► tickerfeed API ──�
 
 ```
 =TICKERFEED("LON:CSPX")                 цена
-=TICKERFEED("NYSEARCA:VTI"; "closeyest")
+=TICKERFEED("NYSEARCA:VTI"; "currency")
 =TICKERFEED(A2:A20; "price")            весь диапазон одним запросом
 =TICKERFEED("LSE:VOD"; "price"; TRUE)   пенсы → фунты
 ```
 
-Атрибуты: `price, priceopen, high, low, volume, closeyest, change, currency, name, tradetime`.
+Атрибуты: `price, currency, name`.
 
 Биржи: `LSE`/`LON` → `.L`, `NYSE`, `NYSEARCA`, `NYSEAMERICAN`, `NASDAQ`, `BATS`. Без префикса символ уходит в Yahoo как есть.
 

@@ -1,5 +1,4 @@
 import json
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -38,8 +37,7 @@ def chart_payload() -> dict[str, Any]:
 
 @pytest.fixture
 def quote_ko() -> Quote:
-    return Quote(symbol='KO', currency='USD', price=95.72, closeyest=95.67, change=0.05,
-                 tradetime=datetime(2026, 11, 9, 16, 0, tzinfo=UTC))
+    return Quote(symbol='KO', currency='USD', price=95.72)
 
 
 @pytest.fixture
