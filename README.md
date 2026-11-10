@@ -44,7 +44,7 @@ poetry run ruff check app tests && poetry run mypy app && poetry run vulture app
 ## Деплой
 
 - systemd-юнит: `etc/tickerfeed.service`, сервис слушает `port` из `.env` напрямую, без nginx.
-- GitHub Actions деплоит master после зелёных тестов. Секреты: `SSH_HOST`, `SSH_USERNAME`, `SSH_PASSWORD`, `TICKERFEED_API_KEY`, `TICKERFEED_PORT`, опционально `TICKERFEED_HTTP_PROXY`.
+- GitHub Actions деплоит master после зелёных тестов. Variables: `SSH_HOST`, `SSH_USERNAME`, `TICKERFEED_PORT`. Secrets: `SSH_PASSWORD`, `TICKERFEED_API_KEY`, опционально `TICKERFEED_HTTP_PROXY`.
 - Пользователю `tickerfeed` нужен sudo только на `systemctl restart tickerfeed`.
 
 ## Плагин
