@@ -28,7 +28,7 @@ async def test_quotes(client, provider, quote_ko) -> None:
     assert body['results'][1]['error'] == 'symbol not found'
 
 
-@pytest.mark.parametrize('headers', [{}, {'X-Api-Key': 'wrong'}])
+@pytest.mark.parametrize('headers', [{}, {'X-Api-Key': 'wrong'}, {'X-Api-Key': '<ключ>'.encode()}])
 async def test_quotes_unauthorized(client, headers) -> None:
     response = await client.get('/v1/quotes', params={'symbols': 'NYSE:KO'}, headers=headers)
 

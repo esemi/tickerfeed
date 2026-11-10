@@ -61,7 +61,7 @@ app = FastAPI(title='tickerfeed', lifespan=lifespan, docs_url=None, redoc_url=No
 
 def check_api_key(x_api_key: Annotated[str, Header()] = '') -> None:
     """Reject requests without a valid shared secret."""
-    if not secrets.compare_digest(x_api_key, app_settings.api_key):
+    if not secrets.compare_digest(x_api_key.encode(), app_settings.api_key.encode()):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='invalid api key')
 
 
